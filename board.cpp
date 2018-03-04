@@ -173,7 +173,8 @@ void Board::setBoard(char data[]) {
         if (data[i] == 'b') {
             taken.set(i);
             black.set(i);
-        } if (data[i] == 'w') {
+        } 
+        if (data[i] == 'w') {
             taken.set(i);
         }
     }

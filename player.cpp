@@ -1,5 +1,6 @@
 #include "player.hpp"
-
+#include "common.hpp"
+#include <climits>
 /*
  * Constructor for the player; initialize everything here. The side your AI is
  * on (BLACK or WHITE) is passed in as "side". The constructor must finish
@@ -8,7 +9,23 @@
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
-
+    
+    if (side == WHITE)
+    {
+        std::cerr << 'd' << std::endl;
+        pside = WHITE;
+        oside = side;
+    } else {
+        std::cerr << 'e' << std::endl;
+        pside = side;
+        oside = WHITE;
+    }
+    board = new Board();
+    
+    //if (pside == WHITE) oside = BLACK;
+    //else oside = WHITE;
+    //Side pside = WHITE;
+    std::cerr << pside << std::endl;
     /*
      * TODO: Do any initialization you need to do here (setting up the board,
      * precalculating things, etc.) However, remember that you will only have
@@ -20,6 +37,51 @@ Player::Player(Side side) {
  * Destructor for the player.
  */
 Player::~Player() {
+    delete board;
+}
+
+int Player::minimax(bool turn, int depth, Board *b) {
+    if (depth == 0)
+    {
+        if (pside == WHITE) {
+            return b->countWhite() - b->countBlack();
+        } else return b->countBlack() - b->countWhite();
+    }
+    int best = 0;
+    if (!turn)
+    {
+        //oside
+        best = INT_MIN;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Move move(i, j);
+                if (b->checkMove(&move, oside)) {
+                    Board *newb = b->copy();
+                    newb->doMove(&move, oside);
+                    int v = minimax(!turn, depth-1, newb);
+                    best = max(v, best);
+                }
+            }
+        }
+        return best;
+    } else {
+        //pside
+        best = INT_MAX;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Move move(i, j);
+                if (b->checkMove(&move, pside)) {
+                    std::cerr << move.getX() << " " << move.getY() << std::endl;
+                    Board *newb = b->copy();
+                    newb->doMove(&move, pside);
+                    int v = minimax(!turn, depth-1, newb);
+                    best = min(v, best);
+                }
+            }
+        }
+        return best;
+    }
+    return 0;
 }
 
 /*
@@ -40,5 +102,25 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
-    return nullptr;
+    Move *m = new Move(0,0);
+    if (opponentsMove != nullptr) board->doMove(opponentsMove, oside);
+    int best = INT_MAX;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            Move move(i, j);
+            if (board->checkMove(&move, pside)) {
+                std::cerr << move.getX() << " " << move.getY() << std::endl;
+                Board *newb = board->copy();
+                newb->doMove(&move, pside);
+                int v = minimax(false, 1, newb);
+                if (v < best)
+                {
+                    best = v;
+                    m->setX(i);
+                    m->setY(j);
+                }
+            }
+        }
+    }
+    return m;
 }
