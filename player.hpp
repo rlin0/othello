@@ -14,6 +14,8 @@ public:
 
     Move *doMove(Move *opponentsMove, int msLeft);
     int minimax(bool turn, int depth, Board *b);
+    int heuristic(Board *b);
+    void printt(Board *b);
 
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;
