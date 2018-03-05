@@ -25,7 +25,7 @@ Player::Player(Side side) {
     //if (pside == WHITE) oside = BLACK;
     //else oside = WHITE;
     //Side pside = WHITE;
-    std::cerr << pside << std::endl;
+    std::cerr << (pside==WHITE) << std::endl;
     /*
      * TODO: Do any initialization you need to do here (setting up the board,
      * precalculating things, etc.) However, remember that you will only have
@@ -71,7 +71,7 @@ int Player::minimax(bool turn, int depth, Board *b) {
             for (int j = 0; j < 8; j++) {
                 Move move(i, j);
                 if (b->checkMove(&move, pside)) {
-                    std::cerr << move.getX() << " " << move.getY() << std::endl;
+                    //std::cerr << move.getX() << " " << move.getY() << std::endl;
                     Board *newb = b->copy();
                     newb->doMove(&move, pside);
                     int v = minimax(!turn, depth-1, newb);
@@ -109,7 +109,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         for (int j = 0; j < 8; j++) {
             Move move(i, j);
             if (board->checkMove(&move, pside)) {
-                std::cerr << move.getX() << " " << move.getY() << std::endl;
+                //std::cerr << move.getX() << " " << move.getY() << std::endl;
                 Board *newb = board->copy();
                 newb->doMove(&move, pside);
                 int v = minimax(false, 1, newb);
@@ -122,5 +122,23 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             }
         }
     }
+    board->doMove(m, pside);
+    /*for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            Move move(i, j);
+            if (board->checkMove(&move, pside)) {
+                std::cerr << move.getX() << " " << move.getY() << std::endl;
+                Board *newb = board->copy();
+                newb->doMove(&move, pside);
+                int v = minimax(false, 1, newb);
+                if (v < best)
+                {
+                    best = v;
+                    m->setX(i);
+                    m->setY(j);
+                }
+            }
+        }
+    }*/
     return m;
 }
