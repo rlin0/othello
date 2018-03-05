@@ -40,12 +40,31 @@ Player::~Player() {
     delete board;
 }
 
+
+int Player::heuristic(Board *b)
+{
+    int sum = 0;
+
+    if (pside == WHITE) 
+    {
+        sum += 5 * (b->get(pside, 0, 0) + b->get(pside, 0, 7) + 
+        b->get(pside, 7, 0) + b->get(pside, 7, 7));
+        return b->countWhite() - b->countBlack() + sum;
+    } 
+    else 
+    {
+        sum -= 5* (b->get(oside, 0, 0) + b->get(oside, 0, 7) + 
+        b->get(oside, 7, 0) + b->get(oside, 7, 7));
+        return b->countBlack() - b->countWhite() + sum;
+    }
+}
+
+
 int Player::minimax(bool turn, int depth, Board *b) {
     if (depth == 0)
     {
-        if (pside == WHITE) {
-            return b->countWhite() - b->countBlack();
-        } else return b->countBlack() - b->countWhite();
+        int count = Player::heuristic(b);
+        return count;
     }
     int best = 0;
     if (!turn)
