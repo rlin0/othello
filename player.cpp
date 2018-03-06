@@ -22,10 +22,6 @@ Player::Player(Side side) {
     }
     board = new Board();
     
-    //if (pside == WHITE) oside = BLACK;
-    //else oside = WHITE;
-    //Side pside = WHITE;
-    //std::cerr << (pside==WHITE) << std::endl;
     /*
      * TODO: Do any initialization you need to do here (setting up the board,
      * precalculating things, etc.) However, remember that you will only have
@@ -169,7 +165,9 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
                 //std::cerr << move.getX() << " " << move.getY() << std::endl;
                 Board *newb = board->copy();
                 newb->doMove(&move, pside);
-                int v = minimax(false, 1, newb);
+                int v;
+                if (testingMinimax) v = minimax(false, 1, newb);
+                else v = minimax(false, 2, newb);
                 //std::cerr << v << std::endl;
                 if (v > best)
                 {
