@@ -53,11 +53,13 @@ int Player::heuristic(Board *b)
         sum += 3 * (b->get(pside, 0, 0) + b->get(pside, 0, 7) + 
             b->get(pside, 7, 0) + b->get(pside, 7, 7));
         // Lower value for pieces adjacent to a corner
-        sum -= 3 * (b->get(pside, 0, 1) + b->get(pside, 1, 0) + 
-            b->get(pside, 6, 0) + b->get(pside, 0, 6));
-        // Lower value for pieces adjacent and diagonal to a corner
-        sum -= 4 * (b->get(pside, 7, 1) + b->get(pside, 1, 7) + 
+        sum -= 2 * (b->get(pside, 0, 1) + b->get(pside, 1, 0) + 
+            b->get(pside, 6, 0) + b->get(pside, 0, 6) +
+            b->get(pside, 7, 1) + b->get(pside, 1, 7) + 
             b->get(pside, 7, 6) + b->get(pside, 6, 7));
+        // Lower value for pieces adjacent and diagonal to a corner
+        sum -= 3 * (b->get(pside, 1, 1) + b->get(pside, 1, 6) + 
+            b->get(pside, 6, 1) + b->get(pside, 6, 6));
         // Greater value for side pieces
         sum += 2 * (b->get(pside, 0, 2) + b->get(pside, 0, 3) +
             b->get(pside, 0, 4) + b->get(pside, 0, 5) + 
