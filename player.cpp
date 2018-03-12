@@ -97,10 +97,10 @@ void Player::printt(Board *b) {
     
 }
 
-int Player::minimax(bool turn, int depth, Board *b) {
+int Player::minimax(bool turn, int depth, Board *bd, int a, int b) {
     if (depth == 0)
     {
-        int count = heuristic(b);
+        int count = heuristic(bd);
         //printt(b);
         //std::cerr << "c " << count << std::endl;
         return count;
@@ -110,21 +110,26 @@ int Player::minimax(bool turn, int depth, Board *b) {
     {
         //oside
         best = INT_MAX;
-        if (!b->hasMoves(oside))
+        if (!bd->hasMoves(oside))
         {
-            Board *newb = b->copy();
-            return minimax(!turn, depth-1, newb);
+            Board *newb = bd->copy();
+            return minimax(!turn, depth-1, newb, a, b);
         }
         
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Move move(i, j);
-                if (b->checkMove(&move, oside)) {
-                    Board *newb = b->copy();
+                if (bd->checkMove(&move, oside)) {
+                    Board *newb = bd->copy();
                     newb->doMove(&move, oside);
                     //printt(newb);
-                    int v = minimax(!turn, depth-1, newb);
+                    int v = minimax(!turn, depth-1, newb, a, b);
                     best = min(v, best);
+                    b = min(b, best);
+                    if (b <= a)
+                    {
+                        return best;
+                    }
                 }
             }
         }
@@ -132,21 +137,26 @@ int Player::minimax(bool turn, int depth, Board *b) {
     } else {
         //pside
         best = INT_MIN;
-        if (!b->hasMoves(pside))
+        if (!bd->hasMoves(pside))
         {
-            Board *newb = b->copy();
-            return minimax(!turn, depth-1, newb);
+            Board *newb = bd->copy();
+            return minimax(!turn, depth-1, newb, a, b);
         }
         
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Move move(i, j);
-                if (b->checkMove(&move, pside)) {
+                if (bd->checkMove(&move, pside)) {
                     //std::cerr << move.getX() << " " << move.getY() << std::endl;
-                    Board *newb = b->copy();
+                    Board *newb = bd->copy();
                     newb->doMove(&move, pside);
-                    int v = minimax(!turn, depth-1, newb);
+                    int v = minimax(!turn, depth-1, newb, a, b);
                     best = max(v, best);
+                    a = max(a, best);
+                    if (b <= a)
+                    {
+                        return best;
+                    }
                 }
             }
         }
@@ -185,8 +195,8 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
                 Board *newb = board->copy();
                 newb->doMove(&move, pside);
                 int v;
-                if (testingMinimax) v = minimax(false, 1, newb);
-                else v = minimax(false, 4, newb);
+                if (testingMinimax) v = minimax(false, 1, newb, INT_MIN, INT_MAX);
+                else v = minimax(false, 6, newb, INT_MIN, INT_MAX);
                 //std::cerr << v << std::endl;
                 if (v > best)
                 {
