@@ -6,6 +6,12 @@
  * on (BLACK or WHITE) is passed in as "side". The constructor must finish
  * within 30 seconds.
  */
+
+
+/* 
+* aldjfhlakjfhlakjsdhf
+*/
+
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
@@ -43,12 +49,25 @@ int Player::heuristic(Board *b)
     int sum = 0;
     if (!testingMinimax)
     {
+        // Greater value for corner pieces
         sum += 3 * (b->get(pside, 0, 0) + b->get(pside, 0, 7) + 
             b->get(pside, 7, 0) + b->get(pside, 7, 7));
+        // Lower value for pieces adjacent to a corner
         sum -= 3 * (b->get(pside, 0, 1) + b->get(pside, 1, 0) + 
-            b->get(pside, 6, 0) + b->get(pside, 7, 1) + 
-            b->get(pside, 0, 6) + b->get(pside, 1, 7) + 
+            b->get(pside, 6, 0) + b->get(pside, 0, 6));
+        // Lower value for pieces adjacent and diagonal to a corner
+        sum -= 4 * (b->get(pside, 7, 1) + b->get(pside, 1, 7) + 
             b->get(pside, 7, 6) + b->get(pside, 6, 7));
+        // Greater value for side pieces
+        sum += 2 * (b->get(pside, 0, 2) + b->get(pside, 0, 3) +
+            b->get(pside, 0, 4) + b->get(pside, 0, 5) + 
+            b->get(pside, 7, 2) + b->get(pside, 7, 3) + 
+            b->get(pside, 7, 4) + b->get(pside, 7, 5) +
+            b->get(pside, 2, 0) + b->get(pside, 3, 0) + 
+            b->get(pside, 4, 0) + b->get(pside, 5, 0) +
+            b->get(pside, 2, 7) + b->get(pside, 3, 7) + 
+            b->get(pside, 4, 7) + b->get(pside, 5, 7));
+
     }
     
     if (pside == WHITE) 
