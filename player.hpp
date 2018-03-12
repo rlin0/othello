@@ -13,7 +13,7 @@ public:
     ~Player();
 
     Move *doMove(Move *opponentsMove, int msLeft);
-    int minimax(bool turn, int depth, Board *b);
+    int minimax(bool turn, int depth, Board *bd, int a, int b);
     int heuristic(Board *b);
     void printt(Board *b);
 
