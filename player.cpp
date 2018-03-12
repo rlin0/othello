@@ -177,7 +177,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
                 newb->doMove(&move, pside);
                 int v;
                 if (testingMinimax) v = minimax(false, 1, newb, INT_MIN, INT_MAX);
-                else v = minimax(false, 7, newb, INT_MIN, INT_MAX);
+                else v = minimax(false, 6, newb, INT_MIN, INT_MAX);
                 //std::cerr << v << std::endl;
                 if (v > best)
                 {
